@@ -11,7 +11,7 @@ Webová aplikace implementuje kompletní redakční a recenzní systém pro věd
 
 ---
 
-## 🌟 Hlavní funkcionality
+## Hlavní funkcionality
 
 - **Vlastní MVC architektura:**
   - `Controlers/`: Zpracování HTTP požadavků, routování akcí a validace vstupů.
@@ -56,7 +56,7 @@ Webová aplikace implementuje kompletní redakční a recenzní systém pro věd
 
 ---
 
-## 🚀 Lokální spuštění
+## Lokální spuštění
 
 ### Požadavky:
 - PHP 8.0+
