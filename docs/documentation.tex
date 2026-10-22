@@ -1,0 +1,158 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{tabularx}
+
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\renewcommand{\maketitle}{%
+ \begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\Huge\bfseries KIV/WEB}\par
+  \vspace{0.5cm}
+  {\Large Semestrální práce}\par
+  \vspace{1.5cm}
+  {\Large \textbf{Konferenční systém}}\par
+  \vspace{0.5cm}
+  {Webová aplikace pro správu konference}\par
+  \vfill
+  \begin{flushleft}
+   \textbf{Autor:} Marek Jirušek\\
+   \textbf{Email:} marjir@students.zcu.cz\\ % DOPLŇTE EMAIL
+   \textbf{Datum:} \today
+  \end{flushleft}
+ \end{titlepage}%
+}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Zadání a popis aplikace}
+
+Cílem semestrální práce bylo navrhnout a implementovat webovou aplikaci pro  správu odborné konference. Systém slouží k registraci účastníků, odevzdávání odborných příspěvků (článků) ve formátu PDF a k zajištění celého procesu recenzního řízení.
+
+
+
+\subsection{Funkcionalita podle rolí}
+Aplikace rozlišuje několik uživatelských rolí, z nichž každá má specifická oprávnění:
+
+\begin{itemize}
+    \item \textbf{Neregistrovaný návštěvník:} Může prohlížet úvodní stránku s nejnovějšími články, procházet archiv schválených příspěvků a provést registraci či přihlášení.
+    \item \textbf{Čtenář:} Základní role po registraci. Má stejná práva jako návštěvník, ale je evidován v systému.
+    \item \textbf{Autor:} Může vytvářet nové články, nahrávat k nim PDF soubory, upravovat je (pokud jsou ve stavu konceptu nebo vrácené k přepracování) a odesílat je do recenzního řízení.
+    \item \textbf{Recenzent:} Vidí seznam článků, které mu byly administrátorem přiděleny k recenzi. Může článek přijmout či zamítnout a musí k němu vypracovat slovní hodnocení.
+    \item \textbf{Administrátor:} Má na starosti správu uživatelů (změna rolí, mazání účtů) a správu recenzního procesu (přiřazování recenzentů k článkům). Vidí stav recenzí a na jejich základě článek finálně schvaluje (publikuje) nebo zamítá.
+    \item \textbf{Super-Admin:} Speciální role s nejvyšším oprávněním, která nemůže být běžným administrátorem smazána ani upravena.
+\end{itemize}
+
+\section{Použité technologie}
+
+Aplikace je postavena na architektuře \textbf{MVC} (Model-View-Controller) 
+\subsection{Backend}
+\begin{itemize}
+    \item \textbf{PHP 8.x:} Hlavní serverový jazyk zajišťující logiku aplikace, routing a komunikaci s databází.
+    \item \textbf{MySQL / MariaDB:} Relační databáze pro ukládání dat (uživatelé, články, recenze).
+    \item \textbf{PDO (PHP Data Objects):} Použito pro přístup k databázi. Zajišťuje bezpečnost pomocí \textit{Prepared Statements} (ochrana proti SQL Injection).
+\end{itemize}
+
+\subsection{Frontend}
+\begin{itemize}
+    \item \textbf{HTML5 / CSS3:} Sémantické značkování obsahu. Vlastní styly jsou umístěny v adresáři \texttt{CSSs/} a doplňují framework.
+    \item \textbf{Bootstrap 5:} CSS framework využitý pro zajištění responzivního designu (Grid systém) a pro UI komponenty (navigační lišta, modální okna, alerty, karty).
+    \item \textbf{JavaScript (ES6):}
+    \begin{itemize}
+        \item Využit pro asynchronní komunikaci (\textbf{AJAX}) v sekci pro správu recenzentů (přiřazování bez obnovení stránky).
+        \item Obsluha UI prvků (přepínání mezi zobrazením PDF a textového obsahu).
+    \end{itemize}
+    \item \textbf{CKEditor 5:} Externí knihovna (WYSIWYG editor) použitá pro formátování textového obsahu článků.
+\end{itemize}
+
+\section{Adresářová struktura}
+
+Struktura projektu je rozdělena logicky podle odpovědností MVC architektury:
+
+\begin{itemize}
+    \item \textbf{config/} -- Konfigurační soubory (připojení k DB, konstanty).
+    \item \textbf{Controlers/} -- Třídy řadičů (Controllers), které zpracovávají požadavky.
+    \item \textbf{CSSs/} -- Kaskádové styly (vlastní CSS soubory).
+    \item \textbf{Models/} -- Třídy pro práci s daty a databází.
+    \item \textbf{uploads/} -- Úložiště pro nahrané PDF soubory článků.
+    \item \textbf{Views/} -- HTML šablony (pohledy) pro zobrazení obsahu uživateli.
+    \item \textbf{index.php} -- Vstupní bod aplikace (Front Controller).
+    
+\end{itemize}
+
+\section{Architektura aplikace}
+
+Aplikacevyužívá objektově orientovaný přístup (OOP). Vstupním bodem je \texttt{index.php}, který inicializuje \texttt{Routing}.
+
+\subsection{Popis klíčových tříd}
+
+\subsubsection{Routing a Database modely}
+\begin{itemize}
+    \item \textbf{\texttt{Routing}:} Zpracovává URL parametry (např. \texttt{?path=article-maker}), na jejichž základě dynamicky načítá příslušný Controller a předává mu řízení.
+    \item \textbf{\texttt{Database}:} Třída implementující návrhový vzor \textit{Singleton}. Zajišťuje jediné připojení k databázi pro celou dobu běhu skriptu.
+\end{itemize}
+
+\subsubsection{Modely}
+Modely zapouzdřují logiku pro práci s daty a komunikaci s databází.
+\begin{itemize}
+    \item \textbf{\texttt{UserModel}:} Zajišťuje autentizaci (ověření hesla), registraci a správu uživatelů.
+    \item \textbf{\texttt{ArticleModel}:} Implementuje operace pro články. Vrací data jako instance třídy \texttt{Article}.
+    \item \textbf{\texttt{ReviewManagementModel}:} Obsahuje logiku pro administraci recenzí – přiřazování recenzentů a změny stavů článků.
+    \item \textbf{\texttt{RecenzentModel}:} Poskytuje data specifická pro roli recenzenta (seznam přidělených článků, ukládání hodnocení).
+\end{itemize}
+
+\subsubsection{Controllery (Controllers)}
+Controllery propojují Modely a Views. Ověřují oprávnění uživatele.
+\begin{itemize}
+    \item \textbf{\texttt{ArticleMakerController}:} Řídí proces vytváření a editace článku autorem, včetně uploadu souborů a validace.
+    \item \textbf{\texttt{ManageUsersController}:} Zajišťuje výpis uživatelů a změny jejich rolí.
+    \item \textbf{\texttt{ManageRecenzentsController}:} Zpracovává požadavky na přiřazení recenzentů.
+    \item \textbf{\texttt{ArticleController}:} Zobrazuje detail článku a zajišťuje bezpečné stažení PDF (kontrola oprávnění).
+\end{itemize}
+
+\section{Seznam defaultních uživatelů}
+
+V databázi jsou předpřipraveni uživatelé pro otestování všech rolí aplikace.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Login} & \textbf{Heslo} & \textbf{Role} & \textbf{Poznámka} \\ \hline
+SUPERADMIN & SUPERADMIN & Super-Admin & Stejná práva jako admin, může přidělit admina \\ \hline
+LOL & LOLLOL & Admin & Správa uživatelů a recenzí \\ \hline
+NOOB & NOOBNOOB & Recenzent & Hodnotí články \\ \hline
+KOŠ & KOŠKOŠ & Recenzent & Hodnotí články \\ \hline
+TEST & TESTTEST & Autor & Vytváří články \\ \hline
+PEPA & PEPAPEPA & Čtenář & Pouze prohlížení \\ \hline
+IDK & IDKIDK & Recenzent & Hodnotí články \\ \hline
+\end{tabular}
+\end{center}
+
+\end{document}

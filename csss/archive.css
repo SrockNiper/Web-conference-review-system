@@ -1,0 +1,48 @@
+/* Archiv článků */
+.article-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.article-card .card-body {
+    padding: 1.5rem;
+}
+
+.article-card .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.article-card .card-text {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.article-meta {
+    font-size: 0.875rem;
+    border-top: 1px solid #e9ecef;
+    padding-top: 0.75rem;
+}
+
+.article-meta i {
+    margin-right: 0.25rem;
+}
+
+/*Responzivní úpravy */
+@media (max-width: 767.98px) {
+    .article-card .card-body {
+        padding: 1rem;
+    }
+
+    .article-card .card-title {
+        font-size: 1.1rem;
+    }
+}

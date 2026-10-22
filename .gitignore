@@ -1,0 +1,17 @@
+# Database dumps & backups
+*.sql
+záloha_dv/
+
+# Uploaded documents
+uploads/*
+!uploads/.gitkeep
+
+# IDE & OS
+.idea/
+.vscode/
+*.suo
+*.user
+.DS_Store
+Thumbs.db
+
+odeslat_na_github.bat

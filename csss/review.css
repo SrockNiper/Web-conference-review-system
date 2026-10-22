@@ -1,0 +1,40 @@
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.navbar-brand h1 {
+    color: #fff !important;
+    white-space: nowrap;
+}
+
+.hamburger-icon {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    position: relative;
+    display: block;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+}
+
+.hamburger-icon::before {
+    top: -8px;
+}
+
+.hamburger-icon::after {
+    top: 8px;
+}
+
+.card {
+    border: none;
+    border-radius: 0.8rem;
+}
